@@ -12,7 +12,7 @@
 			</q-input>
 
 			<div class="flex flex-center">
-				<q-btn :disable="hasError" label="Login" color="primary" @click="validateLogin" />
+				<q-btn :disable="hasError" label="Login" color="secondary" @click="validateLogin" />
 			</div>
 		</q-form>
 	</transition>

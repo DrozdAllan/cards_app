@@ -1,5 +1,5 @@
 <template>
-	<q-layout view="hHh lpR fFr">
+	<q-layout view="hHr lpR fFr">
 
 		<Drawer />
 
@@ -7,13 +7,13 @@
 			<router-view />
 		</q-page-container>
 
-		<Footer />
+		<Header />
 
 	</q-layout>
 </template>
 
 <script setup>
-import Footer from './components/Footer.vue';
+import Header from './components/Header.vue';
 import Drawer from './components/Drawer.vue';
 
 </script>

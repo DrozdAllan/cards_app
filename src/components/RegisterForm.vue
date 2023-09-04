@@ -14,7 +14,7 @@
 			</q-input>
 
 			<div class="flex flex-center">
-				<q-btn :disable="hasError" label="Register" color="primary" @click="validateRegister" />
+				<q-btn :disable="hasError" label="Register" color="secondary" @click="validateRegister" />
 			</div>
 		</q-form>
 	</transition>
@@ -23,11 +23,13 @@
 <script setup>
 import { ref } from "vue";
 import { useDrawerStore } from "../stores/DrawerStore";
+import { useUserStore } from "../stores/UserStore";
 
 import '@quasar/extras/animate/backInRight.css'
 import '@quasar/extras/animate/backOutRight.css'
 
 const drawerStore = useDrawerStore();
+const userStore = useUserStore();
 const registerForm = ref(null)
 const hasError = ref(false)
 const email = ref('')
@@ -52,31 +54,12 @@ const passwordRules = [
 ]
 
 async function validateRegister() {
-	// TODO: fetch
-	// const success = await registerForm.value.validate();
-	// if (success) {
-	// 	axios
-	// 		.post("/register", {
-	// 			email: email.value,
-	// 			name: username.value,
-	// 			password: password.value,
-	// 			password_confirmation: password.value,
-	// 		})
-	// 		.then((Response) => {
-	// 			if (Response.status == 201) {
-	// 				axios
-	// 					.post("/login", {
-	// 						name: username.value,
-	// 						password: password.value
-	// 					})
-	// 					.then((Response) => {
-	// 						location.reload();
-	// 					});
-	// 			}
-	// 		})
-	// } else {
-	// 	console.log('form failure')
-	// 	hasError.value = true;
-	// }
+	const success = await registerForm.value.validate();
+	if (success) {
+		userStore.registerUser(email.value, username.value, password.value);
+	} else {
+		console.log('form failure')
+		hasError.value = true;
+	}
 }
 </script>
