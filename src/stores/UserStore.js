@@ -96,7 +96,7 @@ export const useUserStore = defineStore('user', {
 				return error
 			}
 		},
-		async addCards(request) {
+		async updateCards(request) {
 			try {
 				const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/cards', {
 					method: "PUT",

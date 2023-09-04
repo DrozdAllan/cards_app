@@ -60,7 +60,7 @@ watch(
 
 function addCard(card) {
 	console.log(card);
-	userStore.addCards({ "id": card._id, "qty": 1 });
+	userStore.updateCards({ "id": card._id, "qty": 1 });
 }
 
 </script>

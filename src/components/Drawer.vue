@@ -9,7 +9,7 @@
 					<div class="text-bold">Your cards</div>
 					<div class="q-pa-md" style="max-width: 350px">
 						<q-list bordered separator>
-							<q-item v-for="card in userStore.cards" clickable v-ripple>
+							<q-item v-for="card in userStore.cards" clickable v-ripple @click="removeCard(card)">
 								<q-item-section>
 									<q-item-label>{{ card.name }}</q-item-label>
 									<q-item-label caption>{{ card.quantity }}</q-item-label>
@@ -41,8 +41,12 @@ import { useDrawerStore } from '../stores/DrawerStore';
 const userStore = useUserStore();
 const drawerStore = useDrawerStore();
 
-
 onMounted(() => {
 	userStore.getUser();
 })
+
+function removeCard(card) {
+	console.log(card);
+	userStore.updateCards({ "id": card._id, "qty": -1 });
+}
 </script>
