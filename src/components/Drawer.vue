@@ -3,7 +3,7 @@
 		<!-- drawer content -->
 		<div class="q-pt-xl">
 			<div v-if="userStore.id" class="q-py-md">
-				Bienvenue {{ userStore.name }} <br>
+				Hello {{ userStore.name }} <br>
 				<q-btn label="Logout" color="secondary" class="q-ma-md" @click="userStore.disconnect" />
 				<div>
 					<div class="text-bold">Your cards</div>

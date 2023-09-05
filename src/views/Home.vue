@@ -1,27 +1,39 @@
 <template>
 	<q-page padding>
-		<div class="row">
-			<div v-for="card in cards" class="q-ma-md">
-				<q-card class='theCard'>
+		<div class="q-pa-md row q-gutter-md">
 
-					<div class="text-caption text-no-wrap">{{ card.name }}</div>
-					<q-img src="https://placehold.co/220x210" placeholder="/path/to/placeholder-image.jpg" fit="none" />
-					<div class="text-left q-ml-sm">
-						<div class="text-bold">[{{ card.type }}]</div>
-						<p class="line-clamp q-pa-none q-ma-none">
+			<q-card v-for="card in cards" class="my-card q-pa-sm">
+
+				<div class="text-uppercase text-left text-bold text-no-wrap q-pl-sm q-pb-xs"
+					style="letter-spacing: -0.5px; font-size: 0.8em;">{{ card.name }}</div>
+
+				<div class="row justify-end q-pr-sm">
+					<q-icon v-if="card.level >= 1" v-for="n in card.level" name="star" />
+					<q-space v-else class="q-py-sm"></q-space>
+				</div>
+
+				<q-img src="https://placehold.co/220x210" placeholder="/path/to/placeholder-image.jpg" fit="none" />
+
+				<div class="column" style="height: 235px;">
+					<div class="col q-mx-sm text-left">
+						<div class="text-subtitle2">[{{ card.type }}]</div>
+						<p class="line-clamp">
 							{{ card.desc }}
 						</p>
 					</div>
-					<div class="row justify-end">
-						<div v-if="userStore.id"><q-btn icon="favorite" size="xs" flat round dense @click="addCard(card)" />
-						</div>
-						<div v-if="card.atk != null">
-							<span>atk: {{ card.atk }}</span>
-							<span class="q-mx-xs">def: {{ card.def }}</span>
-						</div>
+
+					<div class="col self-end">
+						<q-btn v-if="userStore.id" icon="favorite" size="xs" flat round dense @click="addCard(card)" />
+
+						<span v-if="card.atk != null">
+							ATK / {{ card.atk }} DEF / {{ card.def }}
+						</span>
 					</div>
-				</q-card>
-			</div>
+
+				</div>
+
+			</q-card>
+
 		</div>
 	</q-page>
 </template>
@@ -67,19 +79,15 @@ function addCard(card) {
 <style>
 .line-clamp {
 	display: -webkit-box;
-	-webkit-line-clamp: 6;
+	-webkit-line-clamp: 7;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
-	font-size: 0.8em;
+	font-size: 0.7em;
 }
 
-.theCard {
+.my-card {
 	width: 250px;
 	height: 400px;
-}
-
-.theStats {
-	position: absolute;
-	bottom: 0;
+	line-height: normal;
 }
 </style>

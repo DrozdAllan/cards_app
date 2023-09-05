@@ -1,8 +1,8 @@
 <template>
-	<q-header elevated class="bg-grey-8 text-white">
+	<q-header elevated class="bg-grey-8 text-white" style="">
 		<q-toolbar>
-			<q-toolbar-title>
-				<q-input class="q-py-sm" bg-color="white" outlined v-model="cardName" label="Search for a card by name"
+			<q-toolbar-title class="q-ma-xs">
+				<q-input bg-color="white" outlined v-model="cardName" label="Search for a card by name"
 					@keyup="searchCard" />
 			</q-toolbar-title>
 		</q-toolbar>
