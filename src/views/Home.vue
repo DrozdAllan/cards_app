@@ -1,7 +1,8 @@
 <template>
 	<q-page padding>
-		<div class="q-pa-md row q-gutter-md">
+		<q-input bg-color="white" outlined v-model="cardName" label="Search for a card by name" @keyup="searchCard" />
 
+		<div class="q-pa-md row q-gutter-md">
 			<q-card v-for="card in cards" class="my-card q-pa-sm">
 
 				<div class="text-uppercase text-left text-bold text-no-wrap q-pl-sm q-pb-xs"
@@ -22,12 +23,15 @@
 						</p>
 					</div>
 
-					<div class="col self-end">
-						<q-btn v-if="userStore.id" icon="favorite" size="xs" flat round dense @click="addCard(card)" />
-
-						<span v-if="card.atk != null">
-							ATK / {{ card.atk }} DEF / {{ card.def }}
-						</span>
+					<div class="col row justify-between">
+						<div class="col-1 q-pl-xs">
+						</div>
+						<div class="col-11 text-right">
+							<span v-if="card.atk != null">
+								ATK / {{ card.atk }} DEF / {{ card.def }}
+							</span>
+							<q-btn v-if="userStore.id" icon="favorite" size="xs" flat round dense @click="addCard(card)" />
+						</div>
 					</div>
 
 				</div>
@@ -46,6 +50,31 @@ import { useUserStore } from '../stores/UserStore';
 const cards = ref([]);
 const searchStore = useSearchStore();
 const userStore = useUserStore();
+const cardName = ref();
+const searchTimer = ref(null)
+
+function searchCard() {
+	// Clear any existing timers
+	clearTimeout(searchTimer.value);
+
+	// Set a new timer with a delay (e.g., 500 milliseconds)
+	searchTimer.value = setTimeout(() => {
+		// Call your search function here
+		performSearch();
+	}, 500);
+}
+
+async function performSearch() {
+	// Your search logic goes here
+	if (cardName.value.length > 8) {
+		searchStore.performSearch(cardName.value);
+	}
+}
+
+function addCard(card) {
+	console.log(card);
+	userStore.updateCards({ "id": card._id, "qty": 1 });
+}
 
 onMounted(async () => {
 	try {
@@ -69,12 +98,6 @@ watch(
 		cards.value = response;
 	}
 )
-
-function addCard(card) {
-	console.log(card);
-	userStore.updateCards({ "id": card._id, "qty": 1 });
-}
-
 </script>
 <style>
 .line-clamp {

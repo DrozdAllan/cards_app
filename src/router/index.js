@@ -9,6 +9,11 @@ const router = createRouter({
 			name: "home",
 		},
 		{
+			path: "/profile",
+			component: () => import("../views/Profile.vue"),
+			name: "profile",
+		},
+		{
 			path: "/:pathMatch(.*)*",
 			redirect: { name: 'home' }
 		},

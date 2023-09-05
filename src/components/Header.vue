@@ -1,37 +1,22 @@
 <template>
-	<q-header elevated class="bg-grey-8 text-white" style="">
+	<q-header elevated class="bg-secondary text-white" style="">
 		<q-toolbar>
+			<q-btn dense flat round icon="menu" @click="drawerStore.toggleDrawer" />
+
 			<q-toolbar-title class="q-ma-xs">
-				<q-input bg-color="white" outlined v-model="cardName" label="Search for a card by name"
-					@keyup="searchCard" />
+				CARDS_APP
 			</q-toolbar-title>
 		</q-toolbar>
+		<q-tabs align="left" class="text-white" active-color="white" indicator-color="white">
+			<q-route-tab to="/" label="Search" class="text-white" />
+			<q-route-tab to="/profile" label="Profile" class="text-white" />
+		</q-tabs>
 	</q-header>
 </template>
 <script setup>
-import { ref } from 'vue';
-import { useSearchStore } from '../stores/SearchStore';
+import { useDrawerStore } from '../stores/DrawerStore';
 
-const searchStore = useSearchStore();
+const drawerStore = useDrawerStore();
 
-const cardName = ref();
-const searchTimer = ref(null)
 
-function searchCard() {
-	// Clear any existing timers
-	clearTimeout(searchTimer.value);
-
-	// Set a new timer with a delay (e.g., 500 milliseconds)
-	searchTimer.value = setTimeout(() => {
-		// Call your search function here
-		performSearch();
-	}, 500);
-}
-
-async function performSearch() {
-	// Your search logic goes here
-	if (cardName.value.length > 8) {
-		searchStore.performSearch(cardName.value);
-	}
-}
 </script>
