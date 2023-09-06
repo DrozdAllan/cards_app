@@ -5,7 +5,8 @@ export const useUserStore = defineStore('user', {
 	state: () => ({
 		id: null,
 		name: null,
-		cards: []
+		cards: [],
+		decks: []
 	}),
 	actions: {
 		async getUser() {
@@ -77,6 +78,7 @@ export const useUserStore = defineStore('user', {
 				this.id = _id;
 				this.name = name;
 			} catch (error) {
+				console.log(error);
 				return error;
 			}
 		},
@@ -89,8 +91,7 @@ export const useUserStore = defineStore('user', {
 						"Authorization": "Bearer " + Cookies.get("token"),
 					},
 				});
-				const cards = await response.json();
-				this.cards = cards;
+				this.cards = await response.json();
 			} catch (error) {
 				console.log(error);
 				return error
@@ -108,14 +109,66 @@ export const useUserStore = defineStore('user', {
 						"cards": [request],
 					}),
 				});
-				const cards = await response.json();
-				console.log(cards);
-				this.cards = cards;
+				this.cards = await response.json();
 			} catch (error) {
 				console.log(error);
 				return error
 			}
 		},
-
+		async getUserDecks() {
+			try {
+				const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/decks', {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": "Bearer " + Cookies.get("token"),
+					},
+				});
+				this.decks = await response.json();
+			} catch (error) {
+				console.log(error);
+				return error
+			}
+		},
+		async createNewDeck(deckName) {
+			try {
+				const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/decks', {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": "Bearer " + Cookies.get("token"),
+					},
+					body: JSON.stringify({
+						"name": deckName,
+						"cards": [],
+					}),
+				});
+				this.decks = await response.json();
+			} catch (error) {
+				console.log(error);
+				return error
+			}
+		},
+		async updateDecks(request) {
+			// TODO
+			// try {
+			// 	const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/cards', {
+			// 		method: "PUT",
+			// 		headers: {
+			// 			"Content-Type": "application/json",
+			// 			"Authorization": "Bearer " + Cookies.get("token"),
+			// 		},
+			// 		body: JSON.stringify({
+			// 			"cards": [request],
+			// 		}),
+			// 	});
+			// 	const cards = await response.json();
+			// 	console.log(cards);
+			// 	this.cards = cards;
+			// } catch (error) {
+			// 	console.log(error);
+			// 	return error
+			// }
+		},
 	}
 });
