@@ -9,11 +9,14 @@
 
 		<Header />
 
+		<Footer />
+
 	</q-layout>
 </template>
 
 <script setup>
 import Header from './components/Header.vue';
 import Drawer from './components/Drawer.vue';
+import Footer from './components/Footer.vue';
 
 </script>

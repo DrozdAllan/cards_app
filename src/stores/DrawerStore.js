@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 export const useDrawerStore = defineStore('drawer', {
-	state: () => ({ drawerOpen: false, loginForm: false, registerForm: false }),
+	state: () => ({ drawerOpen: false, loginForm: false, registerForm: false, footerOpen: false }),
 	actions: {
 		toggleDrawer() {
 			this.drawerOpen = !this.drawerOpen;
@@ -13,6 +13,9 @@ export const useDrawerStore = defineStore('drawer', {
 		toggleRegisterForm() {
 			this.registerForm = !this.registerForm;
 			this.loginForm = false;
-		}
+		},
+		toggleFooter() {
+			this.footerOpen = !this.footerOpen;
+		},
 	}
 })
