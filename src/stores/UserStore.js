@@ -149,7 +149,7 @@ export const useUserStore = defineStore('user', {
 				return error
 			}
 		},
-		async updateDecks(request) {
+		async updateDeck(request) {
 			// TODO
 			// try {
 			// 	const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/cards', {

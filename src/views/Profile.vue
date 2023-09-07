@@ -1,14 +1,14 @@
 <template>
 	<q-page padding>
 		<div v-if="userStore.id">
-			<div>
-				<div class="text-bold">Your decks</div>
+			<div class="text-bold">Your decks</div>
+			<div class="row">
 				<div v-if="userStore.decks == []"> No deck found</div>
 				<div v-else v-for="deck in userStore.decks">
 
 					<q-chip color="secondary" text-color="white" clickable @click="modifyDeck(deck)" :label="deck.name" />
 				</div>
-
+				<q-chip color="secondary" text-color="white" label="+" />
 				<q-form class="q-pa-md bordered" ref="loginForm">
 					<q-input v-model="deckName" label="Deck Name" filled />
 					<div class="flex flex-center">
