@@ -15,7 +15,7 @@
 							<q-list dense padding class="rounded-borders">
 								<q-item v-for="deckCard in deck.cards" clickable v-ripple @click="toCards(deckCard._id)">
 									<q-item-section>
-										{{ deckCard.name }} ({{ deckCard.quantity }})
+										{{ deckCard.name }} ({{ deckCard.quantity }}) {{ deckCard._id }}
 									</q-item-section>
 									<q-item-section avatar>
 										<q-icon color="primary" name="chevron_right" />
@@ -27,7 +27,7 @@
 					<div class="col">
 						<q-scroll-area style="height: 400px;">
 							<q-list dense padding class="rounded-borders">
-								<q-item v-for="allCard in userStore.cards" clickable v-ripple @click="toDeck(allCard)">
+								<q-item v-for="allCard in cards" clickable v-ripple @click="toDeck(allCard)">
 									<q-item-section avatar>
 										<q-icon color="primary" name="chevron_left" />
 									</q-item-section>
@@ -50,7 +50,7 @@
 </template>
   
 <script setup>
-import { ref } from 'vue';
+import { ref, readonly, shallowReactive, shallowRef } from 'vue';
 import { useDialogPluginComponent } from 'quasar'
 import { useUserStore } from '../stores/UserStore';
 
@@ -71,16 +71,31 @@ const userStore = useUserStore();
 
 const deck = ref(props.deck);
 const cards = ref(userStore.cards);
-// console.log(deck.value, cards.value);
 
 function toCards(cardId) {
-	console.log(cardId);
-	const newDeck = deck.value.cards.filter((card) => card._id !== cardId);
-	console.log(newDeck);
-	deck.value.cards = newDeck;
+	// In deck : quantity - 1 if card.quantity > 1 OR filter card if card.quantity = 1
+	const deckCard = deck.value.cards.find((card) => card._id == cardId);
+	if (deckCard.quantity > 1) {
+		// deckCard.quantity = deckCard.quantity - 1;
+		deckCard.quantity--;
+	} else {
+		const newDeck = deck.value.cards.filter((card) => card._id !== cardId);
+		deck.value.cards = newDeck;
+	}
+	// In user : quantity + 1 if card exists OR push card if card doesn't exist
+	const userCard = cards.value.find((card) => card._id == cardId);
+	if (userCard) {
+		userCard.quantity++;
+	} else {
+		// spread operator to unref
+		let qty1 = { ...deckCard };
+		qty1.quantity = 1;
+		cards.value.push(qty1);
+	}
 }
 
 function toDeck(allCard) {
+	// TODO
 	console.log(allCard);
 	deck.value.cards.push(allCard);
 }
