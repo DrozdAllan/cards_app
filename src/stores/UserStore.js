@@ -106,7 +106,7 @@ export const useUserStore = defineStore('user', {
 						"Authorization": "Bearer " + Cookies.get("token"),
 					},
 					body: JSON.stringify({
-						"cards": [request],
+						"cards": request,
 					}),
 				});
 				this.cards = await response.json();
@@ -149,26 +149,30 @@ export const useUserStore = defineStore('user', {
 				return error
 			}
 		},
-		async updateDeck(request) {
-			// TODO
-			// try {
-			// 	const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/cards', {
-			// 		method: "PUT",
-			// 		headers: {
-			// 			"Content-Type": "application/json",
-			// 			"Authorization": "Bearer " + Cookies.get("token"),
-			// 		},
-			// 		body: JSON.stringify({
-			// 			"cards": [request],
-			// 		}),
-			// 	});
-			// 	const cards = await response.json();
-			// 	console.log(cards);
-			// 	this.cards = cards;
-			// } catch (error) {
-			// 	console.log(error);
-			// 	return error
-			// }
+		async updateDeck(deckId, cardss) {
+			// format to request to use cardsComparator in backend
+			// const formattedRequest = [];
+			// await cardss.forEach((card) => formattedRequest.push({ "id": card._id, "qty": card.quantity }));
+			try {
+				const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/decks', {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": "Bearer " + Cookies.get("token"),
+					},
+					body: JSON.stringify({
+						"deckId": deckId,
+						"cards": cardss,
+					}),
+				});
+				const result = await response.json();
+				console.log(result);
+				// const modifiedDeckId = this.decks.indexOf(_id == deckId);
+				// this.decks[modifiedDeckId] = result;
+			} catch (error) {
+				console.log(error);
+				return error
+			}
 		},
 	}
 });

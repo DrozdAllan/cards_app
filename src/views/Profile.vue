@@ -1,20 +1,31 @@
 <template>
-	<q-page padding>
+	<q-page>
 		<div v-if="userStore.id">
-			<div class="text-bold">Your decks</div>
-			<div class="row">
-				<div v-if="userStore.decks == []"> No deck found</div>
-				<div v-else v-for="deck in userStore.decks">
-
-					<q-chip color="secondary" text-color="white" clickable @click="modifyDeck(deck)" :label="deck.name" />
-				</div>
-				<q-chip color="secondary" text-color="white" label="+" />
-				<q-form class="q-pa-md bordered" ref="loginForm">
-					<q-input v-model="deckName" label="Deck Name" filled />
-					<div class="flex flex-center">
-						<q-btn color="secondary" @click="createDeck()">create deck</q-btn>
+			<div class="text-h4 q-pb-md">Your decks</div>
+			<div v-if="userStore.decks == []"> No deck found</div>
+			<div v-else class="row justify-between">
+				<div class="col-8 row q-gutter-sm">
+					<div v-for="deck in userStore.decks">
+						<q-card class="deck-card">
+							<q-card-section>
+								<span class="text-h6">{{ deck.name }}</span>
+							</q-card-section>
+							<q-card-section>
+								deck description
+							</q-card-section>
+							<q-card-actions align="around">
+								<q-btn flat @click="modifyDeck(deck)" class="text-primary">modify</q-btn>
+								<q-btn flat @click="deleteDeck(deck)" class="text-red">delete</q-btn>
+							</q-card-actions>
+						</q-card>
 					</div>
-				</q-form>
+				</div>
+				<div class="col-4">
+					<q-form class="q-pa-md bordered" ref="loginForm">
+						<q-input v-model="deckName" label="New Deck Name" filled />
+						<q-btn class="q-mt-md" color="secondary" @click="createDeck()">create new deck</q-btn>
+					</q-form>
+				</div>
 			</div>
 
 		</div>
@@ -58,6 +69,10 @@ function modifyDeck(deck) {
 	})
 }
 
+function deleteDeck() {
+	// TODO: deleteDeck in backend
+}
+
 onMounted(() => {
 	userStore.getUser();
 	userStore.getUserDecks();
@@ -66,5 +81,11 @@ onMounted(() => {
 <style>
 .bordered {
 	border: solid 1px;
+}
+
+.deck-card {
+	width: 250px;
+	height: 170px;
+	line-height: normal;
 }
 </style>

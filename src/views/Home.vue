@@ -3,7 +3,7 @@
 		<q-input bg-color="white" outlined v-model="cardName" label="Search for a card by name" @keyup="searchCard" />
 
 		<div class="q-pa-md row q-gutter-md">
-			<q-card v-for="card in cards" class="my-card q-pa-sm">
+			<q-card v-for="card in cards" class="custom-card q-pa-sm">
 
 				<div class="text-uppercase text-left text-bold text-no-wrap q-pl-sm q-pb-xs"
 					style="letter-spacing: -0.5px; font-size: 0.8em;">{{ card.name }}</div>
@@ -73,7 +73,7 @@ async function performSearch() {
 
 function addCard(card) {
 	console.log(card);
-	userStore.updateCards({ "id": card._id, "qty": 1 });
+	userStore.updateCards([{ "id": card._id, "qty": 1 }]);
 }
 
 onMounted(async () => {
@@ -108,7 +108,7 @@ watch(
 	font-size: 0.7em;
 }
 
-.my-card {
+.custom-card {
 	width: 250px;
 	height: 400px;
 	line-height: normal;

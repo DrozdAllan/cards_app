@@ -23,6 +23,6 @@ onMounted(() => {
 
 function removeCard(card) {
 	console.log(card);
-	userStore.updateCards({ "id": card._id, "qty": -1 });
+	userStore.updateCards([{ "id": card._id, "qty": -1 }]);
 }
 </script>
