@@ -1,39 +1,33 @@
 <template>
 	<q-page padding>
-		<q-input bg-color="white" outlined v-model="cardName" label="Search for a card by name" @keyup="searchCard" />
+		<q-input bg-color="white" class="q-ma-md" outlined v-model="cardName" label="Search for a card by name"
+			@keyup="searchCard" />
 
-		<div class="q-pa-md row q-gutter-md">
+		<div class="row justify-around q-gutter-md">
 			<q-card v-for="card in cards" class="custom-card q-pa-sm">
 
-				<div class="text-uppercase text-left text-bold text-no-wrap q-pl-sm q-pb-xs"
+				<div class="text-uppercase text-left text-bold text-no-wrap"
 					style="letter-spacing: -0.5px; font-size: 0.8em;">{{ card.name }}</div>
 
-				<div class="row justify-end q-pr-sm">
-					<q-icon v-if="card.level >= 1" v-for="n in card.level" name="star" />
-					<q-space v-else class="q-py-sm"></q-space>
+				<div class="row justify-end">
+					<q-icon v-if="card.level >= 1" v-for="n in card.level" name="star_border" />
+					<q-space v-else class="q-py-sm" />
 				</div>
 
-				<q-img src="https://placehold.co/220x210" placeholder="/path/to/placeholder-image.jpg" fit="none" />
+				<q-img src="https://placehold.co/220x240" placeholder="/path/to/placeholder-image.jpg" fit="none" />
 
-				<div class="column" style="height: 235px;">
-					<div class="col q-mx-sm text-left">
-						<div class="text-subtitle2">[{{ card.type }}]</div>
-						<p class="line-clamp">
-							{{ card.desc }}
-						</p>
-					</div>
+				<div class="text-left" style="height: 75px;">
+					<div class="text-subtitle2">[{{ card.type }}]</div>
+					<span class="line-clamp">
+						{{ card.desc }}
+					</span>
+				</div>
 
-					<div class="col row justify-between">
-						<div class="col-1 q-pl-xs">
-						</div>
-						<div class="col-11 text-right">
-							<span v-if="card.atk != null">
-								ATK / {{ card.atk }} DEF / {{ card.def }}
-							</span>
-							<q-btn v-if="userStore.id" icon="favorite" size="xs" flat round dense @click="addCard(card)" />
-						</div>
-					</div>
-
+				<div class="text-right">
+					<span v-if="card.atk != null">
+						ATK / {{ card.atk }} DEF / {{ card.def }}
+					</span>
+					<q-btn v-if="userStore.id" icon="favorite" size="xs" class="q-mb-xs" color="secondary" flat round dense @click="addCard(card)" />
 				</div>
 
 			</q-card>
@@ -102,14 +96,14 @@ watch(
 <style>
 .line-clamp {
 	display: -webkit-box;
-	-webkit-line-clamp: 7;
+	-webkit-line-clamp: 5;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 	font-size: 0.7em;
 }
 
 .custom-card {
-	width: 250px;
+	width: 260px;
 	height: 400px;
 	line-height: normal;
 }

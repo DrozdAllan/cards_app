@@ -22,10 +22,11 @@ export const useUserStore = defineStore('user', {
 							"Authorization": "Bearer " + Cookies.get("token"),
 						}
 					});
-					const { _id, name } = await response.json();
+					const { _id, name, cards, decks } = await response.json();
 					this.id = _id;
 					this.name = name;
-					this.getUserCards();
+					this.cards = cards;
+					this.decks = decks;
 				} catch (error) {
 					console.log(error);
 					return error
@@ -166,9 +167,31 @@ export const useUserStore = defineStore('user', {
 					}),
 				});
 				const result = await response.json();
-				console.log(result);
-				// const modifiedDeckId = this.decks.indexOf(_id == deckId);
-				// this.decks[modifiedDeckId] = result;
+				this.decks.forEach((deck) => {
+					if (deck._id == result._id) {
+						deck.name = result.name
+						// TODO: add description
+						deck.cards = result.cards
+					}
+				});
+			} catch (error) {
+				console.log(error);
+				return error
+			}
+		},
+		async deleteDeck(deckId) {
+			try {
+				const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/decks', {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": "Bearer " + Cookies.get("token"),
+					},
+					body: JSON.stringify({
+						"deckId": deckId
+					}),
+				});
+				this.decks = await response.json();
 			} catch (error) {
 				console.log(error);
 				return error

@@ -4,9 +4,9 @@ const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
 	routes: [
 		{
-			path: "/",
-			component: () => import("../views/Home.vue"),
-			name: "home",
+			path: "/search",
+			component: () => import("../views/Search.vue"),
+			name: "search",
 		},
 		{
 			path: "/profile",
@@ -15,7 +15,7 @@ const router = createRouter({
 		},
 		{
 			path: "/:pathMatch(.*)*",
-			redirect: { name: 'home' }
+			redirect: { name: 'search' }
 		},
 	],
 });

@@ -1,5 +1,5 @@
 <template>
-	<transition enter-active-class="animated backInLeft" leave-active-class="animated backOutLeft faster">
+	<transition enter-active-class="animated backInLeft">
 		<q-form v-if="drawerStore.loginForm" class="q-pa-md bordered" ref="loginForm">
 			<q-input v-model="email" label="Email" filled lazy-rules="ondemand" :rules="emailRules"
 				@click="hasError = false" @keydown.enter="validateLogin" />

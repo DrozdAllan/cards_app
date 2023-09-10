@@ -1,5 +1,5 @@
 <template>
-	<q-layout view="hHh lpR fFf">
+	<q-layout view="hhh lpR fFf">
 
 		<Drawer />
 
@@ -9,7 +9,7 @@
 
 		<Header />
 
-		<Footer />
+		<Footer v-if="userStore.id" />
 
 	</q-layout>
 </template>
@@ -18,5 +18,12 @@
 import Header from './components/Header.vue';
 import Drawer from './components/Drawer.vue';
 import Footer from './components/Footer.vue';
+import { onMounted } from 'vue';
+import { useUserStore } from './stores/UserStore';
 
+const userStore = useUserStore();
+
+onMounted(() => {
+	userStore.getUser();
+})
 </script>

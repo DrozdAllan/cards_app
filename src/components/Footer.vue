@@ -18,7 +18,7 @@ import { useUserStore } from '../stores/UserStore';
 const userStore = useUserStore();
 
 onMounted(() => {
-	userStore.getUser();
+	// userStore.getUser();
 })
 
 function removeCard(card) {

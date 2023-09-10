@@ -1,10 +1,7 @@
 <template>
 	<q-dialog ref="dialogRef" @hide="onDialogHide">
 		<q-card class="q-dialog-plugin" style="width: 600px;">
-			<!--
-		  ...content
-		  ... use q-card-section for it?
-		-->
+
 			<q-card-section class="text-center">
 				{{ props.deck.name }}
 			</q-card-section>
@@ -66,12 +63,11 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginC
 //                    example: onDialogOK() - no payload
 //                    example: onDialogOK({ /*...*/ }) - with payload
 // onDialogCancel - Function to call to settle dialog with "cancel" outcome
-const props = defineProps(['deck'])
+const props = defineProps(['deck', 'cards'])
 const userStore = useUserStore();
 
 const deck = ref(props.deck);
-const userCards = ref(userStore.cards);
-const defaultDeck = { ...deck.value };
+const userCards = ref(props.cards);
 
 function toCards(cardId) {
 	// In deck : quantity - 1 if card.quantity > 1 OR filter card if card.quantity = 1
@@ -127,12 +123,6 @@ function onOKClick() {
 }
 
 function onCancel() {
-	deck.value = defaultDeck;
-	// userStore.decks.forEach((element) => {
-	// 	if (element._id == deck.value._id) {
-	// 		element.cards = defaultDeck.cards
-	// 	}
-	// });
 	onDialogCancel();
 }
 </script>

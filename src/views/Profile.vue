@@ -1,5 +1,5 @@
 <template>
-	<q-page>
+	<q-page padding class="text-center">
 		<div v-if="userStore.id">
 			<div class="text-h4 q-pb-md">Your decks</div>
 			<div v-if="userStore.decks == []"> No deck found</div>
@@ -15,7 +15,7 @@
 							</q-card-section>
 							<q-card-actions align="around">
 								<q-btn flat @click="modifyDeck(deck)" class="text-primary">modify</q-btn>
-								<q-btn flat @click="deleteDeck(deck)" class="text-red">delete</q-btn>
+								<q-btn flat @click="deleteDeck(deck._id)" class="text-red">delete</q-btn>
 							</q-card-actions>
 						</q-card>
 					</div>
@@ -37,11 +37,12 @@
 	</q-page>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { useUserStore } from '../stores/UserStore';
 import { useDrawerStore } from '../stores/DrawerStore';
 import DeckDialog from '../components/DeckDialog.vue';
+import cloneDeep from 'https://unpkg.com/lodash-es/cloneDeep';
 
 const userStore = useUserStore();
 const drawerStore = useDrawerStore();
@@ -58,7 +59,8 @@ function modifyDeck(deck) {
 	$q.dialog({
 		component: DeckDialog,
 		componentProps: {
-			deck: deck,
+			deck: cloneDeep(deck),
+			cards: cloneDeep(userStore.cards)
 		}
 	}).onOk(() => {
 		console.log('OK')
@@ -69,14 +71,9 @@ function modifyDeck(deck) {
 	})
 }
 
-function deleteDeck() {
-	// TODO: deleteDeck in backend
+function deleteDeck(deckId) {
+	userStore.deleteDeck(deckId);
 }
-
-onMounted(() => {
-	userStore.getUser();
-	userStore.getUserDecks();
-})
 </script>
 <style>
 .bordered {
