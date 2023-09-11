@@ -21,7 +21,7 @@
 					</div>
 				</div>
 				<div class="col-4">
-					<q-form class="q-pa-md bordered" ref="loginForm">
+					<q-form class="q-pa-md bordered-form" ref="loginForm">
 						<q-input v-model="deckName" label="New Deck Name" filled />
 						<q-btn class="q-mt-md" color="secondary" @click="createDeck()">create new deck</q-btn>
 					</q-form>
@@ -76,10 +76,6 @@ function deleteDeck(deckId) {
 }
 </script>
 <style>
-.bordered {
-	border: solid 1px;
-}
-
 .deck-card {
 	width: 250px;
 	height: 170px;

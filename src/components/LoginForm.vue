@@ -1,6 +1,6 @@
 <template>
 	<transition enter-active-class="animated backInLeft">
-		<q-form v-if="drawerStore.loginForm" class="q-pa-md bordered" ref="loginForm">
+		<q-form v-if="drawerStore.loginForm" class="q-pa-md bordered-form" ref="loginForm">
 			<q-input v-model="email" label="Email" filled lazy-rules="ondemand" :rules="emailRules"
 				@click="hasError = false" @keydown.enter="validateLogin" />
 			<q-input v-model="password" label="Password" filled lazy-rules="ondemand" :rules="passwordRules"
@@ -51,7 +51,3 @@ async function validateLogin() {
 	}
 }
 </script>
-<style>
-.bordered{
-	border: solid 1px;
-}</style>

@@ -1,6 +1,6 @@
 <template>
 	<transition enter-active-class="animated backInRight">
-		<q-form ref="registerForm" class="q-pa-md bordered" v-if="drawerStore.registerForm">
+		<q-form ref="registerForm" class="q-pa-md bordered-form" v-if="drawerStore.registerForm">
 			<q-input v-model="email" label="Email" type="email" filled lazy-rules="ondemand" :rules="emailRules"
 				@click="hasError = false" @keydown.enter="validateRegister" />
 			<q-input v-model="username" label="Username" filled lazy-rules="ondemand" :rules="usernameRules"
@@ -63,8 +63,3 @@ async function validateRegister() {
 	}
 }
 </script>
-<style>
-.bordered {
-	border: solid 1px;
-}
-</style>

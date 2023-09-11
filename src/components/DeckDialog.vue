@@ -1,6 +1,6 @@
 <template>
-	<q-dialog ref="dialogRef" @hide="onDialogHide">
-		<q-card class="q-dialog-plugin" style="width: 600px;">
+	<q-dialog full-width ref="dialogRef" @hide="onDialogHide">
+		<q-card class="q-dialog-plugin">
 
 			<q-card-section class="text-center">
 				{{ props.deck.name }}
@@ -8,53 +8,67 @@
 			<q-card-section>
 				<div class="row">
 					<div class="col">
-						<q-scroll-area style="height: 400px;">
-							<q-list dense padding class="rounded-borders">
-								<q-item v-for="deckCard in deck.cards" clickable v-ripple @click="toCards(deckCard._id)">
-									<q-item-section>
-										{{ deckCard.name }} ({{ deckCard.quantity }})
-									</q-item-section>
-									<q-item-section avatar>
-										<q-icon color="primary" name="chevron_right" />
-									</q-item-section>
-								</q-item>
-							</q-list>
+						<q-scroll-area style="height: 600px;">
+
+							<draggable :list="deck.cards" group="same-group" @start="drag = true" @end="drag = false"
+								item-key="id">
+								<template #item="{ element }">
+									<q-item dense clickable class="bordered-item" v-ripple @click="toCards(element._id)">
+										<q-item-section>
+											{{ element.name }} ({{ element.quantity }})
+										</q-item-section>
+										<q-item-section avatar>
+											<q-icon color="primary" name="chevron_right" />
+										</q-item-section>
+										<q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]"
+											class="text-black">
+											<card-component :card="element" />
+										</q-tooltip>
+									</q-item>
+								</template>
+							</draggable>
 						</q-scroll-area>
 					</div>
 					<div class="col">
-						<q-scroll-area style="height: 400px;">
-							<q-list dense padding class="rounded-borders">
-								<q-item v-for="allCard in userCards" clickable v-ripple @click="toDeck(allCard._id)">
-									<q-item-section avatar>
-										<q-icon color="primary" name="chevron_left" />
-									</q-item-section>
-									<q-item-section>
-										{{ allCard.name }} ({{ allCard.quantity }})
-									</q-item-section>
-								</q-item>
-							</q-list>
+						<q-scroll-area style="height: 600px;">
+							<draggable :list="userCards" group="same-group" @start="drag = true" @end="drag = false"
+								item-key="id">
+								<template #item="{ element }">
+									<q-item dense clickable class="bordered-item" v-ripple @click="toDeck(element._id)">
+										<q-item-section avatar>
+											<q-icon color="primary" name="chevron_left" />
+										</q-item-section>
+										<q-item-section>
+											{{ element.name }} ({{ element.quantity }})
+										</q-item-section>
+										<q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]"
+											class="text-black">
+											<card-component :card="element" />
+										</q-tooltip>
+									</q-item>
+								</template>
+							</draggable>
 						</q-scroll-area>
 					</div>
 				</div>
 			</q-card-section>
-			<!-- buttons example -->
 			<q-card-actions align="right">
 				<q-btn color="secondary" label="Save" @click="onOKClick" />
 				<q-btn color="warning" label="Cancel" @click="onCancel" />
 			</q-card-actions>
+
 		</q-card>
 	</q-dialog>
 </template>
   
 <script setup>
-// TODO: add Vue draggable https://github.com/SortableJS/vue.draggable.next
 import { ref } from 'vue';
 import { useDialogPluginComponent } from 'quasar'
-import { useUserStore } from '../stores/UserStore';
+import { useUserStore } from '../stores/UserStore'
+import draggable from 'vuedraggable'
+import CardComponent from '../components/CardComponent.vue';
 
 defineEmits([
-	// REQUIRED; need to specify some events that your
-	// component will emit through useDialogPluginComponent()
 	...useDialogPluginComponent.emits
 ])
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
@@ -69,6 +83,7 @@ const userStore = useUserStore();
 
 const deck = ref(props.deck);
 const userCards = ref(props.cards);
+const drag = ref(false);
 
 function toCards(cardId) {
 	// In deck : quantity - 1 if card.quantity > 1 OR filter card if card.quantity = 1
@@ -112,7 +127,6 @@ function toDeck(cardId) {
 	}
 }
 
-
 // this is part of our example (so not required)
 function onOKClick() {
 	userStore.updateDeck(deck.value._id, deck.value.cards);
@@ -127,3 +141,12 @@ function onCancel() {
 	onDialogCancel();
 }
 </script>
+<style scoped>
+.bordered-item {
+	border: solid rgba(0, 0, 0, 0.12) 1px;
+	border-radius: 2px;
+	margin-bottom: 2px;
+	margin-left: 1px;
+	margin-right: 1px;
+}
+</style>
