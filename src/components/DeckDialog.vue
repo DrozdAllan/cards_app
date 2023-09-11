@@ -47,6 +47,7 @@
 </template>
   
 <script setup>
+// TODO: add Vue draggable https://github.com/SortableJS/vue.draggable.next
 import { ref } from 'vue';
 import { useDialogPluginComponent } from 'quasar'
 import { useUserStore } from '../stores/UserStore';
