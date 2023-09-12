@@ -10,44 +10,42 @@
 					<div class="col">
 						<q-scroll-area style="height: 600px;">
 
-							<draggable :list="deck.cards" group="same-group" @start="drag = true" @end="drag = false"
-								item-key="id">
-								<template #item="{ element }">
-									<q-item dense clickable class="bordered-item" v-ripple @click="toCards(element._id)">
-										<q-item-section>
-											{{ element.name }} ({{ element.quantity }})
-										</q-item-section>
-										<q-item-section avatar>
-											<q-icon color="primary" name="chevron_right" />
-										</q-item-section>
-										<q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]"
-											class="text-black">
-											<card-component :card="element" />
-										</q-tooltip>
-									</q-item>
-								</template>
-							</draggable>
+							<q-list bordered separator dense @drop="onDeckDrop($event)" @dragenter.prevent
+								@dragover.prevent>
+								<q-item v-for="card in deck.cards" :key="card._id" clickable v-ripple draggable="true"
+									@click="toCards(card._id)" @dragstart="startDrag($event, card._id)">
+									<q-item-section>
+										{{ card.name }} ({{ card.quantity }})
+									</q-item-section>
+									<q-item-section avatar>
+										<q-icon color="primary" name="chevron_right" />
+									</q-item-section>
+									<q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]"
+										class="text-black">
+										<card-component :card="card" />
+									</q-tooltip>
+								</q-item>
+							</q-list>
 						</q-scroll-area>
 					</div>
 					<div class="col">
 						<q-scroll-area style="height: 600px;">
-							<draggable :list="userCards" group="same-group" @start="drag = true" @end="drag = false"
-								item-key="id">
-								<template #item="{ element }">
-									<q-item dense clickable class="bordered-item" v-ripple @click="toDeck(element._id)">
-										<q-item-section avatar>
-											<q-icon color="primary" name="chevron_left" />
-										</q-item-section>
-										<q-item-section>
-											{{ element.name }} ({{ element.quantity }})
-										</q-item-section>
-										<q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]"
-											class="text-black">
-											<card-component :card="element" />
-										</q-tooltip>
-									</q-item>
-								</template>
-							</draggable>
+							<q-list bordered separator dense @drop="onCardsDrop($event)" @dragenter.prevent
+								@dragover.prevent>
+								<q-item v-for="card in userCards" :key="card._id" clickable v-ripple draggable="true"
+									@click="toDeck(card._id)" @dragstart="startDrag($event, card._id)">
+									<q-item-section avatar>
+										<q-icon color="primary" name="chevron_left" />
+									</q-item-section>
+									<q-item-section>
+										{{ card.name }} ({{ card.quantity }})
+									</q-item-section>
+									<q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]"
+										class="text-black">
+										<card-component :card="card" />
+									</q-tooltip>
+								</q-item>
+							</q-list>
 						</q-scroll-area>
 					</div>
 				</div>
@@ -65,7 +63,6 @@
 import { ref } from 'vue';
 import { useDialogPluginComponent } from 'quasar'
 import { useUserStore } from '../stores/UserStore'
-import draggable from 'vuedraggable'
 import CardComponent from '../components/CardComponent.vue';
 
 defineEmits([
@@ -83,7 +80,20 @@ const userStore = useUserStore();
 
 const deck = ref(props.deck);
 const userCards = ref(props.cards);
-const drag = ref(false);
+
+function startDrag(event, cardID) {
+	event.dataTransfer.setData('cardID', cardID)
+}
+
+function onCardsDrop(event) {
+	const cardID = event.dataTransfer.getData('cardID')
+	toCards(cardID)
+}
+
+function onDeckDrop(event) {
+	const cardID = event.dataTransfer.getData('cardID')
+	toDeck(cardID)
+}
 
 function toCards(cardId) {
 	// In deck : quantity - 1 if card.quantity > 1 OR filter card if card.quantity = 1
@@ -91,8 +101,7 @@ function toCards(cardId) {
 	if (deckCard.quantity > 1) {
 		deckCard.quantity--;
 	} else {
-		const newDeck = deck.value.cards.filter((card) => card._id !== cardId);
-		deck.value.cards = newDeck;
+		deck.value.cards = deck.value.cards.filter((card) => card._id != cardId);
 	}
 	// In user : quantity + 1 if card exists OR push card if card doesn't exist
 	const userCard = userCards.value.find((card) => card._id == cardId);
@@ -112,8 +121,7 @@ function toDeck(cardId) {
 	if (userCard.quantity > 1) {
 		userCard.quantity--;
 	} else {
-		const newDeck = userCards.value.filter((card) => card._id !== cardId);
-		userCards.value = newDeck;
+		userCards.value = userCards.value.filter((card) => card._id != cardId);
 	}
 	// In deck : quantity + 1 if card exists OR push card if card doesn't exist
 	const deckCard = deck.value.cards.find((card) => card._id == cardId);
@@ -141,12 +149,3 @@ function onCancel() {
 	onDialogCancel();
 }
 </script>
-<style scoped>
-.bordered-item {
-	border: solid rgba(0, 0, 0, 0.12) 1px;
-	border-radius: 2px;
-	margin-bottom: 2px;
-	margin-left: 1px;
-	margin-right: 1px;
-}
-</style>
