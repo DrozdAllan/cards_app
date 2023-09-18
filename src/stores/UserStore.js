@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Cookies } from "quasar";
+import { useDrawerStore } from './DrawerStore'
 
 export const useUserStore = defineStore('user', {
 	state: () => ({
@@ -36,6 +37,7 @@ export const useUserStore = defineStore('user', {
 			}
 		},
 		async loginUser(email, password) {
+			const drawer = useDrawerStore();
 			try {
 				const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/login', {
 					method: "POST",
@@ -48,7 +50,8 @@ export const useUserStore = defineStore('user', {
 				Cookies.set('token', token);
 				this.id = _id;
 				this.name = name;
-				this.getUserCards();
+				this.getUser();
+				drawer.toggleDrawer();
 			} catch (error) {
 				console.log(error);
 				return error
@@ -83,21 +86,21 @@ export const useUserStore = defineStore('user', {
 				return error;
 			}
 		},
-		async getUserCards() {
-			try {
-				const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/cards', {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						"Authorization": "Bearer " + Cookies.get("token"),
-					},
-				});
-				this.cards = await response.json();
-			} catch (error) {
-				console.log(error);
-				return error
-			}
-		},
+		// async getUserCards() {
+		// 	try {
+		// 		const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/cards', {
+		// 			method: "GET",
+		// 			headers: {
+		// 				"Content-Type": "application/json",
+		// 				"Authorization": "Bearer " + Cookies.get("token"),
+		// 			},
+		// 		});
+		// 		this.cards = await response.json();
+		// 	} catch (error) {
+		// 		console.log(error);
+		// 		return error
+		// 	}
+		// },
 		async updateCards(request) {
 			try {
 				const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/cards', {
@@ -116,21 +119,21 @@ export const useUserStore = defineStore('user', {
 				return error
 			}
 		},
-		async getUserDecks() {
-			try {
-				const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/decks', {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						"Authorization": "Bearer " + Cookies.get("token"),
-					},
-				});
-				this.decks = await response.json();
-			} catch (error) {
-				console.log(error);
-				return error
-			}
-		},
+		// async getUserDecks() {
+		// 	try {
+		// 		const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/decks', {
+		// 			method: "GET",
+		// 			headers: {
+		// 				"Content-Type": "application/json",
+		// 				"Authorization": "Bearer " + Cookies.get("token"),
+		// 			},
+		// 		});
+		// 		this.decks = await response.json();
+		// 	} catch (error) {
+		// 		console.log(error);
+		// 		return error
+		// 	}
+		// },
 		async createNewDeck(deckName) {
 			try {
 				const response = await fetch(import.meta.env.VITE_API_ENDPOINT + '/users/decks', {

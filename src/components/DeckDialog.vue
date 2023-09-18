@@ -124,6 +124,7 @@ function toDeck(cardId) {
 		userCards.value = userCards.value.filter((card) => card._id != cardId);
 	}
 	// In deck : quantity + 1 if card exists OR push card if card doesn't exist
+	//TODO: add maximum 3 copies of the same card
 	const deckCard = deck.value.cards.find((card) => card._id == cardId);
 	if (deckCard) {
 		deckCard.quantity++;
