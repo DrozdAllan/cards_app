@@ -12,7 +12,7 @@
 
 							<q-list bordered separator dense @drop="onDeckDrop($event)" @dragenter.prevent
 								@dragover.prevent>
-								<q-item v-for="card in deck.cards" :key="card._id" clickable v-ripple draggable="true"
+								<q-item v-for="card in sortedDeck" :key="card._id" clickable v-ripple draggable="true"
 									@click="toCards(card._id)" @dragstart="startDrag($event, card._id)">
 									<q-item-section>
 										{{ card.name }} ({{ card.quantity }})
@@ -32,7 +32,7 @@
 						<q-scroll-area style="height: 600px;">
 							<q-list bordered separator dense @drop="onCardsDrop($event)" @dragenter.prevent
 								@dragover.prevent>
-								<q-item v-for="card in userCards" :key="card._id" clickable v-ripple draggable="true"
+								<q-item v-for="card in sortedCards" :key="card._id" clickable v-ripple draggable="true"
 									@click="toDeck(card._id)" @dragstart="startDrag($event, card._id)">
 									<q-item-section avatar>
 										<q-icon color="primary" name="chevron_left" />
@@ -60,7 +60,7 @@
 </template>
   
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useDialogPluginComponent } from 'quasar'
 import { useUserStore } from '../stores/UserStore'
 import CardComponent from '../components/CardComponent.vue';
@@ -81,6 +81,37 @@ const userStore = useUserStore();
 const deck = ref(props.deck);
 const userCards = ref(props.cards);
 
+const sortedDeck = computed(() => {
+	return deck.value.cards.sort((a, b) => {
+		const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+		const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+		if (nameA < nameB) {
+			return -1;
+		}
+		if (nameA > nameB) {
+			return 1;
+		}
+		// names must be equal
+		return 0;
+	});
+})
+
+const sortedCards = computed(() => {
+	return userCards.value.sort((a, b) => {
+		const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+		const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+		if (nameA < nameB) {
+			return -1;
+		}
+		if (nameA > nameB) {
+			return 1;
+		}
+		// names must be equal
+		return 0;
+	});
+})
+
+
 function startDrag(event, cardID) {
 	event.dataTransfer.setData('cardID', cardID)
 }
@@ -96,13 +127,6 @@ function onDeckDrop(event) {
 }
 
 function toCards(cardId) {
-	// In deck : quantity - 1 if card.quantity > 1 OR filter card if card.quantity = 1
-	const deckCard = deck.value.cards.find((card) => card._id == cardId);
-	if (deckCard.quantity > 1) {
-		deckCard.quantity--;
-	} else {
-		deck.value.cards = deck.value.cards.filter((card) => card._id != cardId);
-	}
 	// In user : quantity + 1 if card exists OR push card if card doesn't exist
 	const userCard = userCards.value.find((card) => card._id == cardId);
 	if (userCard) {
@@ -113,26 +137,36 @@ function toCards(cardId) {
 		qty1.quantity = 1;
 		userCards.value.push(qty1);
 	}
+	// In deck : quantity - 1 if card.quantity > 1 OR filter card if card.quantity = 1
+	const deckCard = deck.value.cards.find((card) => card._id == cardId);
+	if (deckCard.quantity > 1) {
+		deckCard.quantity--;
+	} else {
+		deck.value.cards = deck.value.cards.filter((card) => card._id != cardId);
+	}
 }
 
 function toDeck(cardId) {
+	// In deck : quantity + 1 if card exists OR push card if card doesn't exist
+	const deckCard = deck.value.cards.find((card) => card._id == cardId);
+	if (deckCard) {
+		if (deckCard.quantity < 3) {
+			deckCard.quantity++;
+		} else {
+			return
+		}
+	} else {
+		// spread operator to unref
+		let qty1 = { ...userCard };
+		qty1.quantity = 1;
+		deck.value.cards.push(qty1);
+	}
 	// In user : quantity - 1 if card.quantity > 1 OR filter card if card.quantity = 1
 	const userCard = userCards.value.find((card) => card._id == cardId);
 	if (userCard.quantity > 1) {
 		userCard.quantity--;
 	} else {
 		userCards.value = userCards.value.filter((card) => card._id != cardId);
-	}
-	// In deck : quantity + 1 if card exists OR push card if card doesn't exist
-	//TODO: add maximum 3 copies of the same card
-	const deckCard = deck.value.cards.find((card) => card._id == cardId);
-	if (deckCard) {
-		deckCard.quantity++;
-	} else {
-		// spread operator to unref
-		let qty1 = { ...userCard };
-		qty1.quantity = 1;
-		deck.value.cards.push(qty1);
 	}
 }
 
